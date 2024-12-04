@@ -3,11 +3,11 @@ import pandas as pd
 import joblib
 from sklearn.preprocessing import MinMaxScaler
 
-# Cargar los modelos entrenados
+# Cargar los modelos entrenados y el escalador
 random_forest_model = joblib.load('random_forest_model.pkl')
 ridge_model = joblib.load('ridge_model.pkl')
 lasso_model = joblib.load('lasso_model.pkl')
-scaler = joblib.load('scaler.pkl')  # Asegúrate de haber guardado el scaler
+scaler = joblib.load('scaler.pkl')  # Asegúrate de haber guardado el escalador entrenado
 
 # Título de la app
 st.title("Recomendaciones Financieras para Estudiantes")
@@ -36,12 +36,20 @@ input_data = pd.DataFrame({
     'miscellaneous': [miscellaneous]
 })
 
-# Excluir las mismas columnas que fueron excluidas en el entrenamiento
-# Las columnas que el modelo no usó durante el entrenamiento
-input_data_filtered = input_data.drop(columns=['gender', 'year_in_school', 'major', 'preferred_payment_method'], errors='ignore')
+# Las columnas que el modelo espera, asegúrate de incluirlas todas
+# Asegúrate de incluir todas las columnas del conjunto de entrenamiento
+input_data_full = input_data.copy()
 
-# Escalar las variables de entrada usando el mismo escalador que se usó para el entrenamiento
-input_data_scaled = scaler.transform(input_data_filtered)  # Usa el transform() aquí, no fit_transform()
+# Si faltan columnas, las agregamos manualmente (con valores nulos o promedio)
+# Este paso depende de lo que el modelo espera (puedes usar el promedio de esas columnas)
+# Ejemplo:
+input_data_full['gender'] = ['male']  # O cualquier valor adecuado
+input_data_full['year_in_school'] = ['freshman']  # O cualquier valor adecuado
+input_data_full['major'] = ['engineering']  # O cualquier valor adecuado
+input_data_full['preferred_payment_method'] = ['credit_card']  # O cualquier valor adecuado
+
+# Escalar las variables de entrada utilizando el mismo escalador entrenado
+input_data_scaled = scaler.transform(input_data_full)  # Usar transform() no fit_transform()
 
 # Realizar las predicciones
 rf_prediction = random_forest_model.predict(input_data_scaled)
