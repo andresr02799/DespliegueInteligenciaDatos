@@ -74,3 +74,4 @@ if rf_prediction[0] > 200:
     st.write("¡Recomendación! Considera reducir tus gastos en entretenimiento, tecnología y misceláneos.")
 else:
     st.write("¡Buen trabajo! Tus gastos no esenciales están dentro de un rango razonable.")
+
