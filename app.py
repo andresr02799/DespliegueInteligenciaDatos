@@ -36,20 +36,28 @@ input_data = pd.DataFrame({
     'miscellaneous': [miscellaneous]
 })
 
-# Las columnas que el modelo espera, asegúrate de incluirlas todas
-# Asegúrate de incluir todas las columnas del conjunto de entrenamiento
-input_data_full = input_data.copy()
+# Añadir las columnas faltantes con valores predeterminados
+# Estas columnas deben tener los mismos nombres que las que el modelo espera
+input_data['gender'] = ['male']  # O cualquier valor adecuado
+input_data['year_in_school'] = ['freshman']  # O cualquier valor adecuado
+input_data['major'] = ['engineering']  # O cualquier valor adecuado
+input_data['preferred_payment_method'] = ['credit_card']  # O cualquier valor adecuado
 
-# Si faltan columnas, las agregamos manualmente (con valores nulos o promedio)
-# Este paso depende de lo que el modelo espera (puedes usar el promedio de esas columnas)
-# Ejemplo:
-input_data_full['gender'] = ['male']  # O cualquier valor adecuado
-input_data_full['year_in_school'] = ['freshman']  # O cualquier valor adecuado
-input_data_full['major'] = ['engineering']  # O cualquier valor adecuado
-input_data_full['preferred_payment_method'] = ['credit_card']  # O cualquier valor adecuado
+# Añadir las columnas que el modelo espera pero no están presentes en los datos de entrada
+input_data['books_supplies'] = [0]  # Valor predeterminado
+input_data['financial_aid'] = [0]  # Valor predeterminado
+input_data['gasto_total'] = [0]  # Valor predeterminado
+input_data['health_wellness'] = [0]  # Valor predeterminado
+input_data['personal_care'] = [0]  # Valor predeterminado
+
+# Asegurarse de que las columnas estén en el mismo orden que el modelo espera
+input_data = input_data[['age', 'monthly_income', 'tuition', 'housing', 'food', 
+                         'transportation', 'entertainment', 'technology', 'miscellaneous',
+                         'gender', 'year_in_school', 'major', 'preferred_payment_method', 
+                         'books_supplies', 'financial_aid', 'gasto_total', 'health_wellness', 'personal_care']]
 
 # Escalar las variables de entrada utilizando el mismo escalador entrenado
-input_data_scaled = scaler.transform(input_data_full)  # Usar transform() no fit_transform()
+input_data_scaled = scaler.transform(input_data)  # Usar transform() no fit_transform()
 
 # Realizar las predicciones
 rf_prediction = random_forest_model.predict(input_data_scaled)
