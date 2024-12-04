@@ -38,13 +38,14 @@ input_data = pd.DataFrame({
 # Excluir las mismas columnas que fueron excluidas en el entrenamiento
 # Aquí, el modelo fue entrenado sin las columnas como `gender`, `year_in_school`, `major`, y `preferred_payment_method`
 # Asegúrate de excluirlas también en la predicción
+# NOTA: Es importante usar `errors='ignore'` para que no haya errores si estas columnas no están presentes.
 columns_to_exclude = ['gender', 'year_in_school', 'major', 'preferred_payment_method']
 input_data_filtered = input_data.drop(columns=columns_to_exclude, errors='ignore')
 
 # Escalar las variables de entrada (usar el mismo escalador usado durante el entrenamiento)
+# ** IMPORTANTE: **
+# Asegúrate de usar el mismo escalador utilizado durante el entrenamiento para no cambiar el rango de los datos
 scaler = MinMaxScaler()
-
-# Asegúrate de usar el mismo ajuste de escalado que el que se usó durante el entrenamiento
 input_data_scaled = scaler.fit_transform(input_data_filtered)
 
 # Realizar las predicciones
