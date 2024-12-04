@@ -35,9 +35,17 @@ input_data = pd.DataFrame({
     'miscellaneous': [miscellaneous]
 })
 
-# Escalar las variables de entrada
+# Excluir las mismas columnas que fueron excluidas en el entrenamiento
+# Aquí, el modelo fue entrenado sin las columnas como `gender`, `year_in_school`, `major`, y `preferred_payment_method`
+# Asegúrate de excluirlas también en la predicción
+columns_to_exclude = ['gender', 'year_in_school', 'major', 'preferred_payment_method']
+input_data_filtered = input_data.drop(columns=columns_to_exclude, errors='ignore')
+
+# Escalar las variables de entrada (usar el mismo escalador usado durante el entrenamiento)
 scaler = MinMaxScaler()
-input_data_scaled = scaler.fit_transform(input_data)
+
+# Asegúrate de usar el mismo ajuste de escalado que el que se usó durante el entrenamiento
+input_data_scaled = scaler.fit_transform(input_data_filtered)
 
 # Realizar las predicciones
 rf_prediction = random_forest_model.predict(input_data_scaled)
