@@ -7,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 random_forest_model = joblib.load('random_forest_model.pkl')
 ridge_model = joblib.load('ridge_model.pkl')
 lasso_model = joblib.load('lasso_model.pkl')
+scaler = joblib.load('scaler.pkl')  # Asegúrate de haber guardado el scaler
 
 # Título de la app
 st.title("Recomendaciones Financieras para Estudiantes")
@@ -36,17 +37,11 @@ input_data = pd.DataFrame({
 })
 
 # Excluir las mismas columnas que fueron excluidas en el entrenamiento
-# Aquí, el modelo fue entrenado sin las columnas como `gender`, `year_in_school`, `major`, y `preferred_payment_method`
-# Asegúrate de excluirlas también en la predicción
-# NOTA: Es importante usar `errors='ignore'` para que no haya errores si estas columnas no están presentes.
-columns_to_exclude = ['gender', 'year_in_school', 'major', 'preferred_payment_method']
-input_data_filtered = input_data.drop(columns=columns_to_exclude, errors='ignore')
+# Las columnas que el modelo no usó durante el entrenamiento
+input_data_filtered = input_data.drop(columns=['gender', 'year_in_school', 'major', 'preferred_payment_method'], errors='ignore')
 
-# Escalar las variables de entrada (usar el mismo escalador usado durante el entrenamiento)
-# ** IMPORTANTE: **
-# Asegúrate de usar el mismo escalador utilizado durante el entrenamiento para no cambiar el rango de los datos
-scaler = MinMaxScaler()
-input_data_scaled = scaler.fit_transform(input_data_filtered)
+# Escalar las variables de entrada usando el mismo escalador que se usó para el entrenamiento
+input_data_scaled = scaler.transform(input_data_filtered)  # Usa el transform() aquí, no fit_transform()
 
 # Realizar las predicciones
 rf_prediction = random_forest_model.predict(input_data_scaled)
