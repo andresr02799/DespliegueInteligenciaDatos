@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Cargar dataset
-data_path = "/content/student_spending (1).csv"
+data_path = "https://raw.githubusercontent.com/andresr02799/DespliegueInteligenciaDatos/main/student_spending.csv"
 student_spending = pd.read_csv(data_path)
 
 # Visualizar las primeras filas
